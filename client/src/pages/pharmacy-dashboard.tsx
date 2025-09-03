@@ -12,7 +12,7 @@ import { apiRequest, queryClient } from "@/lib/queryClient";
 
 export default function PharmacyDashboard() {
   const { toast } = useToast();
-  const { isAuthenticated, isLoading, user } = useAuth();
+  const { isAuthenticated, isLoading, user, profile } = useAuth();
   const [showAIModal, setShowAIModal] = useState(false);
 
   useEffect(() => {

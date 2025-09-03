@@ -34,7 +34,7 @@ function Router() {
       ) : (
         <>
           <Route path="/" component={() => {
-            switch ((user as any)?.role) {
+            switch (user?.role) {
               case 'patient':
                 return <PatientDashboard />;
               case 'doctor':
@@ -46,7 +46,7 @@ function Router() {
             }
           }} />
           <Route path="/dashboard" component={() => {
-            switch ((user as any)?.role) {
+            switch (user?.role) {
               case 'patient':
                 return <PatientDashboard />;
               case 'doctor':

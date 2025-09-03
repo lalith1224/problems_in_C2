@@ -11,7 +11,7 @@ import AIAssistantModal from "@/components/ai-assistant-modal";
 
 export default function DoctorDashboard() {
   const { toast } = useToast();
-  const { isAuthenticated, isLoading, user } = useAuth();
+  const { isAuthenticated, isLoading, user, profile } = useAuth();
   const [showAIModal, setShowAIModal] = useState(false);
 
   useEffect(() => {
@@ -71,10 +71,10 @@ export default function DoctorDashboard() {
               <div className="flex items-center space-x-3">
                 <div className="text-right">
                   <p className="text-sm font-medium text-foreground" data-testid="text-doctor-name">
-                    Dr. {(user as any)?.firstName} {(user as any)?.lastName}
+                    Dr. {user?.firstName} {user?.lastName}
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    {(dashboardData as any)?.doctor?.specialization || "General Medicine"} • ID: D{(user as any)?.id?.slice(-5)}
+                    {(dashboardData as any)?.doctor?.specialization || "General Medicine"} • ID: D{user?.id?.slice(-5)}
                   </p>
                 </div>
                 <div className="w-8 h-8 bg-doctor/20 rounded-full flex items-center justify-center">
@@ -120,7 +120,7 @@ export default function DoctorDashboard() {
             <Card className="bg-gradient-to-r from-doctor/10 to-primary/10 border-border mb-8">
               <CardContent className="p-6">
                 <h2 className="text-2xl font-bold text-foreground mb-2">
-                  Good morning, <span data-testid="text-welcome-doctor">Dr. {(user as any)?.firstName || "Doctor"}</span>!
+                  Good morning, <span data-testid="text-welcome-doctor">Dr. {user?.firstName || "Doctor"}</span>!
                 </h2>
                 <p className="text-muted-foreground">
                   You have {(dashboardData as any)?.stats?.todayPatients || 0} appointments scheduled for today.
