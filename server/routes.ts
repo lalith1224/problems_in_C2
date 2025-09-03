@@ -1,12 +1,37 @@
-import type { Express } from "express";
+import type { Express, Request } from "express";
 import { createServer, type Server } from "http";
+import session from "express-session";
 import { storage } from "./storage";
 import bcrypt from "bcrypt";
 import { z } from "zod";
 import { registerUserSchema } from "@shared/schema";
 import { openRouterService } from "./services/openrouter";
 
+// Extend Express session type
+declare module "express-session" {
+  interface SessionData {
+    userId?: string;
+    userRole?: string;
+  }
+}
+
+interface AuthRequest extends Request {
+  userId?: string;
+  userRole?: string;
+}
+
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Setup session middleware
+  app.use(session({
+    secret: process.env.SESSION_SECRET || 'dev-secret-key-change-in-production',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: false, // Set to true in production with HTTPS
+      httpOnly: true,
+      maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    }
+  }));
   // Registration endpoint
   app.post("/api/auth/register", async (req, res) => {
     try {
@@ -28,6 +53,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         lastName: validatedData.lastName,
         role: validatedData.role,
         passwordHash,
+        profileImageUrl: null,
       });
 
       // Create role-specific profile
@@ -86,8 +112,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Set up session
-      (req.session as any).userId = user.id;
-      (req.session as any).userRole = user.role;
+      req.session.userId = user.id;
+      req.session.userRole = user.role;
 
       const { passwordHash: _, ...safeUser } = user;
       res.json({ user: safeUser });
@@ -99,7 +125,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Logout endpoint
   app.post("/api/auth/logout", (req, res) => {
-    req.session.destroy(() => {
+    req.session.destroy((err) => {
+      if (err) {
+        console.error("Logout error:", err);
+        return res.status(500).json({ message: "Logout failed" });
+      }
       res.json({ message: "Logged out successfully" });
     });
   });
@@ -107,7 +137,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Get current user
   app.get("/api/auth/user", async (req, res) => {
     try {
-      const userId = (req.session as any)?.userId;
+      const userId = req.session?.userId;
       if (!userId) {
         return res.status(401).json({ message: "Not authenticated" });
       }
@@ -136,24 +166,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Authentication middleware
-  const requireAuth = (req: any, res: any, next: any) => {
+  const requireAuth = (req: AuthRequest, res: any, next: any) => {
     const userId = req.session?.userId;
-    if (!userId) {
+    const userRole = req.session?.userRole;
+    if (!userId || !userRole) {
       return res.status(401).json({ message: "Authentication required" });
     }
     req.userId = userId;
-    req.userRole = req.session.userRole;
+    req.userRole = userRole;
     next();
   };
 
   // Patient routes
-  app.get("/api/patient/dashboard", requireAuth, async (req: any, res) => {
+  app.get("/api/patient/dashboard", requireAuth, async (req: AuthRequest, res) => {
     try {
       if (req.userRole !== 'patient') {
         return res.status(403).json({ message: "Access denied" });
       }
 
-      const patient = await storage.getPatientByUserId(req.userId);
+      const patient = await storage.getPatientByUserId(req.userId!);
       if (!patient) {
         return res.status(404).json({ message: "Patient profile not found" });
       }
@@ -187,13 +218,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/appointments", requireAuth, async (req: any, res) => {
+  app.post("/api/appointments", requireAuth, async (req: AuthRequest, res) => {
     try {
       if (req.userRole !== 'patient') {
         return res.status(403).json({ message: "Only patients can book appointments" });
       }
 
-      const patient = await storage.getPatientByUserId(req.userId);
+      const patient = await storage.getPatientByUserId(req.userId!);
       if (!patient) {
         return res.status(404).json({ message: "Patient profile not found" });
       }
@@ -216,13 +247,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Doctor routes
-  app.get("/api/doctor/dashboard", requireAuth, async (req: any, res) => {
+  app.get("/api/doctor/dashboard", requireAuth, async (req: AuthRequest, res) => {
     try {
       if (req.userRole !== 'doctor') {
         return res.status(403).json({ message: "Access denied" });
       }
 
-      const doctor = await storage.getDoctorByUserId(req.userId);
+      const doctor = await storage.getDoctorByUserId(req.userId!);
       if (!doctor) {
         return res.status(404).json({ message: "Doctor profile not found" });
       }
@@ -258,13 +289,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/prescriptions", requireAuth, async (req: any, res) => {
+  app.post("/api/prescriptions", requireAuth, async (req: AuthRequest, res) => {
     try {
       if (req.userRole !== 'doctor') {
         return res.status(403).json({ message: "Only doctors can create prescriptions" });
       }
 
-      const doctor = await storage.getDoctorByUserId(req.userId);
+      const doctor = await storage.getDoctorByUserId(req.userId!);
       if (!doctor) {
         return res.status(404).json({ message: "Doctor profile not found" });
       }
@@ -289,13 +320,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Pharmacy routes
-  app.get("/api/pharmacy/dashboard", requireAuth, async (req: any, res) => {
+  app.get("/api/pharmacy/dashboard", requireAuth, async (req: AuthRequest, res) => {
     try {
       if (req.userRole !== 'pharmacy') {
         return res.status(403).json({ message: "Access denied" });
       }
 
-      const pharmacy = await storage.getPharmacyByUserId(req.userId);
+      const pharmacy = await storage.getPharmacyByUserId(req.userId!);
       if (!pharmacy) {
         return res.status(404).json({ message: "Pharmacy profile not found" });
       }
@@ -324,7 +355,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/prescriptions/:id/status", requireAuth, async (req: any, res) => {
+  app.put("/api/prescriptions/:id/status", requireAuth, async (req: AuthRequest, res) => {
     try {
       if (req.userRole !== 'pharmacy') {
         return res.status(403).json({ message: "Only pharmacies can update prescription status" });
@@ -341,13 +372,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/inventory", requireAuth, async (req: any, res) => {
+  app.post("/api/inventory", requireAuth, async (req: AuthRequest, res) => {
     try {
       if (req.userRole !== 'pharmacy') {
         return res.status(403).json({ message: "Only pharmacies can manage inventory" });
       }
 
-      const pharmacy = await storage.getPharmacyByUserId(req.userId);
+      const pharmacy = await storage.getPharmacyByUserId(req.userId!);
       if (!pharmacy) {
         return res.status(404).json({ message: "Pharmacy profile not found" });
       }
@@ -366,11 +397,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // AI Assistant routes
-  app.post("/api/ai/chat", requireAuth, async (req: any, res) => {
+  app.post("/api/ai/chat", requireAuth, async (req: AuthRequest, res) => {
     try {
       const { message, context } = req.body;
-      const userId = req.userId;
-      const userRole = req.userRole;
+      const userId = req.userId!;
+      const userRole = req.userRole!;
 
       // Get or create conversation
       const conversations = await storage.getUserAIConversations(userId);

@@ -71,10 +71,10 @@ export default function DoctorDashboard() {
               <div className="flex items-center space-x-3">
                 <div className="text-right">
                   <p className="text-sm font-medium text-foreground" data-testid="text-doctor-name">
-                    Dr. {user?.firstName} {user?.lastName}
+                    Dr. {(user as any)?.firstName} {(user as any)?.lastName}
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    {dashboardData?.doctor?.specialization || "General Medicine"} • ID: D{user?.id?.slice(-5)}
+                    {(dashboardData as any)?.doctor?.specialization || "General Medicine"} • ID: D{(user as any)?.id?.slice(-5)}
                   </p>
                 </div>
                 <div className="w-8 h-8 bg-doctor/20 rounded-full flex items-center justify-center">
@@ -120,10 +120,10 @@ export default function DoctorDashboard() {
             <Card className="bg-gradient-to-r from-doctor/10 to-primary/10 border-border mb-8">
               <CardContent className="p-6">
                 <h2 className="text-2xl font-bold text-foreground mb-2">
-                  Good morning, <span data-testid="text-welcome-doctor">Dr. {user?.firstName || "Doctor"}</span>!
+                  Good morning, <span data-testid="text-welcome-doctor">Dr. {(user as any)?.firstName || "Doctor"}</span>!
                 </h2>
                 <p className="text-muted-foreground">
-                  You have {dashboardData?.stats?.todayPatients || 0} appointments scheduled for today.
+                  You have {(dashboardData as any)?.stats?.todayPatients || 0} appointments scheduled for today.
                 </p>
               </CardContent>
             </Card>
@@ -136,7 +136,7 @@ export default function DoctorDashboard() {
                     <div>
                       <p className="text-sm font-medium text-muted-foreground">Today's Patients</p>
                       <p className="text-2xl font-bold text-foreground" data-testid="text-today-patients">
-                        {dashboardData?.stats?.todayPatients || 0}
+                        {(dashboardData as any)?.stats?.todayPatients || 0}
                       </p>
                     </div>
                     <Users className="h-5 w-5 text-patient" />
@@ -150,7 +150,7 @@ export default function DoctorDashboard() {
                     <div>
                       <p className="text-sm font-medium text-muted-foreground">Pending Reviews</p>
                       <p className="text-2xl font-bold text-foreground" data-testid="text-pending-reviews">
-                        {dashboardData?.stats?.pendingReviews || 0}
+                        {(dashboardData as any)?.stats?.pendingReviews || 0}
                       </p>
                     </div>
                     <FileText className="h-5 w-5 text-doctor" />
@@ -164,7 +164,7 @@ export default function DoctorDashboard() {
                     <div>
                       <p className="text-sm font-medium text-muted-foreground">Prescriptions</p>
                       <p className="text-2xl font-bold text-foreground" data-testid="text-prescriptions-count">
-                        {dashboardData?.stats?.totalPrescriptions || 0}
+                        {(dashboardData as any)?.stats?.totalPrescriptions || 0}
                       </p>
                     </div>
                     <Pill className="h-5 w-5 text-pharmacy" />
@@ -178,7 +178,7 @@ export default function DoctorDashboard() {
                     <div>
                       <p className="text-sm font-medium text-muted-foreground">AI Insights</p>
                       <p className="text-2xl font-bold text-foreground" data-testid="text-ai-insights">
-                        {dashboardData?.stats?.aiInsights || 0}
+                        {(dashboardData as any)?.stats?.aiInsights || 0}
                       </p>
                     </div>
                     <Bot className="h-5 w-5 text-primary" />
@@ -196,8 +196,8 @@ export default function DoctorDashboard() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    {dashboardData?.todayAppointments?.length > 0 ? (
-                      dashboardData.todayAppointments.slice(0, 3).map((appointment: any, index: number) => (
+                    {(dashboardData as any)?.todayAppointments?.length > 0 ? (
+                      (dashboardData as any).todayAppointments.slice(0, 3).map((appointment: any, index: number) => (
                         <div key={index} className="flex items-center justify-between p-4 border-l-4 border-l-patient bg-muted/30 rounded-lg">
                           <div>
                             <p className="font-medium text-foreground">Patient {index + 1}</p>
@@ -235,8 +235,8 @@ export default function DoctorDashboard() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    {dashboardData?.prescriptions?.length > 0 ? (
-                      dashboardData.prescriptions.slice(0, 2).map((prescription: any, index: number) => (
+                    {(dashboardData as any)?.prescriptions?.length > 0 ? (
+                      (dashboardData as any).prescriptions.slice(0, 2).map((prescription: any, index: number) => (
                         <div key={index} className="border border-border rounded-lg p-4">
                           <div className="flex justify-between items-start mb-3">
                             <div>
@@ -292,7 +292,7 @@ export default function DoctorDashboard() {
                       </tr>
                     </thead>
                     <tbody>
-                      {dashboardData?.appointments?.slice(0, 3).map((appointment: any, index: number) => (
+                      {(dashboardData as any)?.appointments?.slice(0, 3).map((appointment: any, index: number) => (
                         <tr key={index} className="border-t border-border hover:bg-muted/30 transition-colors">
                           <td className="p-4">
                             <div className="flex items-center space-x-3">

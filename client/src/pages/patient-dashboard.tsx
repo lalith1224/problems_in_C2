@@ -72,9 +72,9 @@ export default function PatientDashboard() {
               <div className="flex items-center space-x-3">
                 <div className="text-right">
                   <p className="text-sm font-medium text-foreground" data-testid="text-username">
-                    {user?.firstName} {user?.lastName}
+                    {(user as any)?.firstName} {(user as any)?.lastName}
                   </p>
-                  <p className="text-xs text-muted-foreground" data-testid="text-patient-id">Patient ID: P{user?.id?.slice(-5)}</p>
+                  <p className="text-xs text-muted-foreground" data-testid="text-patient-id">Patient ID: P{(user as any)?.id?.slice(-5)}</p>
                 </div>
                 <div className="w-8 h-8 bg-patient/20 rounded-full flex items-center justify-center">
                   <Heart className="h-4 w-4 text-patient" />
@@ -119,7 +119,7 @@ export default function PatientDashboard() {
             <Card className="bg-gradient-to-r from-patient/10 to-primary/10 border-border mb-8">
               <CardContent className="p-6">
                 <h2 className="text-2xl font-bold text-foreground mb-2">
-                  Welcome back, <span data-testid="text-welcome-name">{user?.firstName || "Patient"}</span>!
+                  Welcome back, <span data-testid="text-welcome-name">{(user as any)?.firstName || "Patient"}</span>!
                 </h2>
                 <p className="text-muted-foreground">Here's your health overview for today.</p>
               </CardContent>
@@ -133,10 +133,10 @@ export default function PatientDashboard() {
                     <div>
                       <p className="text-sm font-medium text-muted-foreground">Next Appointment</p>
                       <p className="text-2xl font-bold text-foreground" data-testid="text-next-appointment">
-                        {dashboardData?.stats?.nextAppointment ? "Dec 15" : "None"}
+                        {(dashboardData as any)?.stats?.nextAppointment ? "Dec 15" : "None"}
                       </p>
                       <p className="text-sm text-muted-foreground">
-                        {dashboardData?.stats?.nextAppointment ? "Dr. Smith" : "Schedule one"}
+                        {(dashboardData as any)?.stats?.nextAppointment ? "Dr. Smith" : "Schedule one"}
                       </p>
                     </div>
                     <div className="w-12 h-12 bg-patient/10 rounded-lg flex items-center justify-center">
@@ -152,7 +152,7 @@ export default function PatientDashboard() {
                     <div>
                       <p className="text-sm font-medium text-muted-foreground">Active Prescriptions</p>
                       <p className="text-2xl font-bold text-foreground" data-testid="text-prescriptions-count">
-                        {dashboardData?.stats?.activePrescriptions || 0}
+                        {(dashboardData as any)?.stats?.activePrescriptions || 0}
                       </p>
                       <p className="text-sm text-muted-foreground">Current medications</p>
                     </div>
@@ -169,7 +169,7 @@ export default function PatientDashboard() {
                     <div>
                       <p className="text-sm font-medium text-muted-foreground">Health Score</p>
                       <p className="text-2xl font-bold text-foreground" data-testid="text-health-score">
-                        {dashboardData?.stats?.healthScore || 85}
+                        {(dashboardData as any)?.stats?.healthScore || 85}
                       </p>
                       <p className="text-sm text-green-600">Good</p>
                     </div>
@@ -190,8 +190,8 @@ export default function PatientDashboard() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    {dashboardData?.appointments?.slice(0, 3).length > 0 ? (
-                      dashboardData.appointments.slice(0, 3).map((activity: any, index: number) => (
+                    {(dashboardData as any)?.appointments?.slice(0, 3).length > 0 ? (
+                      (dashboardData as any).appointments.slice(0, 3).map((activity: any, index: number) => (
                         <div key={index} className="flex items-start space-x-3">
                           <div className="w-8 h-8 bg-doctor/10 rounded-full flex items-center justify-center">
                             <Stethoscope className="h-4 w-4 text-doctor" />
@@ -289,9 +289,9 @@ export default function PatientDashboard() {
                 </Button>
               </CardHeader>
               <CardContent>
-                {dashboardData?.appointments?.length > 0 ? (
+                {(dashboardData as any)?.appointments?.length > 0 ? (
                   <div className="space-y-4">
-                    {dashboardData.appointments.slice(0, 2).map((appointment: any, index: number) => (
+                    {(dashboardData as any).appointments.slice(0, 2).map((appointment: any, index: number) => (
                       <div key={index} className="flex items-center justify-between p-4 border border-border rounded-lg">
                         <div className="flex items-center space-x-4">
                           <div className="w-12 h-12 bg-doctor/10 rounded-lg flex items-center justify-center">

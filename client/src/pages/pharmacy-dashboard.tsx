@@ -103,10 +103,10 @@ export default function PharmacyDashboard() {
               <div className="flex items-center space-x-3">
                 <div className="text-right">
                   <p className="text-sm font-medium text-foreground" data-testid="text-pharmacy-name">
-                    {dashboardData?.pharmacy?.pharmacyName || "MedPharm Central"}
+                    {(dashboardData as any)?.pharmacy?.pharmacyName || "MedPharm Central"}
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    License: {dashboardData?.pharmacy?.licenseNumber?.slice(-6) || "PH67890"}
+                    License: {(dashboardData as any)?.pharmacy?.licenseNumber?.slice(-6) || "PH67890"}
                   </p>
                 </div>
                 <div className="w-8 h-8 bg-pharmacy/20 rounded-full flex items-center justify-center">
@@ -152,10 +152,10 @@ export default function PharmacyDashboard() {
             <Card className="bg-gradient-to-r from-pharmacy/10 to-primary/10 border-border mb-8">
               <CardContent className="p-6">
                 <h2 className="text-2xl font-bold text-foreground mb-2">
-                  Good morning, <span data-testid="text-welcome-pharmacy">{dashboardData?.pharmacy?.pharmacyName || "MedPharm Central"}</span>!
+                  Good morning, <span data-testid="text-welcome-pharmacy">{(dashboardData as any)?.pharmacy?.pharmacyName || "MedPharm Central"}</span>!
                 </h2>
                 <p className="text-muted-foreground">
-                  You have {dashboardData?.stats?.pendingOrders || 0} new prescriptions to process today.
+                  You have {(dashboardData as any)?.stats?.pendingOrders || 0} new prescriptions to process today.
                 </p>
               </CardContent>
             </Card>
@@ -168,7 +168,7 @@ export default function PharmacyDashboard() {
                     <div>
                       <p className="text-sm font-medium text-muted-foreground">Pending Orders</p>
                       <p className="text-2xl font-bold text-foreground" data-testid="text-pending-orders">
-                        {dashboardData?.stats?.pendingOrders || 0}
+                        {(dashboardData as any)?.stats?.pendingOrders || 0}
                       </p>
                     </div>
                     <Clock className="h-5 w-5 text-yellow-500" />
@@ -182,7 +182,7 @@ export default function PharmacyDashboard() {
                     <div>
                       <p className="text-sm font-medium text-muted-foreground">Low Stock Items</p>
                       <p className="text-2xl font-bold text-foreground" data-testid="text-low-stock">
-                        {dashboardData?.stats?.lowStockCount || 0}
+                        {(dashboardData as any)?.stats?.lowStockCount || 0}
                       </p>
                     </div>
                     <AlertTriangle className="h-5 w-5 text-orange-500" />
@@ -196,7 +196,7 @@ export default function PharmacyDashboard() {
                     <div>
                       <p className="text-sm font-medium text-muted-foreground">Today's Revenue</p>
                       <p className="text-2xl font-bold text-foreground" data-testid="text-revenue">
-                        ${dashboardData?.stats?.todayRevenue || 0}
+                        ${(dashboardData as any)?.stats?.todayRevenue || 0}
                       </p>
                     </div>
                     <DollarSign className="h-5 w-5 text-green-600" />
@@ -210,7 +210,7 @@ export default function PharmacyDashboard() {
                     <div>
                       <p className="text-sm font-medium text-muted-foreground">AI Recommendations</p>
                       <p className="text-2xl font-bold text-foreground" data-testid="text-ai-recommendations">
-                        {dashboardData?.stats?.aiRecommendations || 0}
+                        {(dashboardData as any)?.stats?.aiRecommendations || 0}
                       </p>
                     </div>
                     <Brain className="h-5 w-5 text-primary" />
@@ -228,8 +228,8 @@ export default function PharmacyDashboard() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    {dashboardData?.newPrescriptions?.length > 0 ? (
-                      dashboardData.newPrescriptions.map((prescription: any, index: number) => (
+                    {(dashboardData as any)?.newPrescriptions?.length > 0 ? (
+                      (dashboardData as any).newPrescriptions.map((prescription: any, index: number) => (
                         <div key={prescription.id} className="border border-border rounded-lg p-4 hover:bg-muted/30 transition-colors">
                           <div className="flex justify-between items-start mb-3">
                             <div>
@@ -283,8 +283,8 @@ export default function PharmacyDashboard() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    {dashboardData?.lowStockItems?.length > 0 ? (
-                      dashboardData.lowStockItems.map((item: any, index: number) => (
+                    {(dashboardData as any)?.lowStockItems?.length > 0 ? (
+                      (dashboardData as any).lowStockItems.map((item: any, index: number) => (
                         <div key={item.id} className="border-l-4 border-l-orange-500 bg-orange-50 p-4 rounded-lg">
                           <div className="flex justify-between items-start">
                             <div>
@@ -305,8 +305,8 @@ export default function PharmacyDashboard() {
                       </div>
                     )}
 
-                    {dashboardData?.expiringItems?.length > 0 && (
-                      dashboardData.expiringItems.slice(0, 2).map((item: any, index: number) => (
+                    {(dashboardData as any)?.expiringItems?.length > 0 && (
+                      (dashboardData as any).expiringItems.slice(0, 2).map((item: any, index: number) => (
                         <div key={item.id} className="border-l-4 border-l-yellow-500 bg-yellow-50 p-4 rounded-lg">
                           <div className="flex justify-between items-start">
                             <div>
@@ -359,12 +359,12 @@ export default function PharmacyDashboard() {
                       </tr>
                     </thead>
                     <tbody>
-                      {dashboardData?.newPrescriptions?.slice(0, 3).map((prescription: any, index: number) => (
+                      {(dashboardData as any)?.newPrescriptions?.slice(0, 3).map((prescription: any, index: number) => (
                         <tr key={prescription.id} className="border-t border-border hover:bg-muted/30 transition-colors">
                           <td className="p-4">
                             <div>
                               <p className="font-medium text-foreground">Patient {index + 1}</p>
-                              <p className="text-xs text-muted-foreground">{new Date(prescription.createdAt).toRelativeTimeString || "2 hours ago"}</p>
+                              <p className="text-xs text-muted-foreground">{"2 hours ago"}</p>
                             </div>
                           </td>
                           <td className="p-4 text-sm text-muted-foreground">Medication prescribed</td>
