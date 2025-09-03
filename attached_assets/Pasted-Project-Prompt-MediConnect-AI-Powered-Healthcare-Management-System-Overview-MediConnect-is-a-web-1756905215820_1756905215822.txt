@@ -1,0 +1,128 @@
+Project Prompt – MediConnect: AI-Powered Healthcare Management System
+Overview
+
+MediConnect is a web-based healthcare management system that connects Patients, Doctors, and Pharmacies on a unified platform. It integrates an Agentic AI Assistant powered by the OpenRouter API to provide intelligent recommendations, simplify workflows, and ensure efficient communication across all parties.
+
+The system is built using Node.js (Express.js) for the backend, PostgreSQL for the database, and HTML/CSS for the frontend interface.
+
+Modules & Features
+1. Patient Module
+
+Register/Login using secure authentication.
+
+Maintain personal health records and medical history.
+
+Book appointments with doctors.
+
+Receive e-prescriptions directly in the dashboard.
+
+Search nearby pharmacies for medicine availability.
+
+AI Assistant for Patients:
+
+Symptom checker and preliminary guidance.
+
+Appointment recommendations based on urgency and availability.
+
+Personalized health tips.
+
+2. Doctor Module
+
+Register/Login with professional verification.
+
+Manage appointments and schedules.
+
+Access and update patient medical history.
+
+Generate digital prescriptions.
+
+Communicate securely with patients and pharmacies.
+
+AI Assistant for Doctors:
+
+Suggest possible diagnoses based on patient symptoms.
+
+Recommend medicine dosages and alternatives.
+
+Summarize patient medical history for quick review.
+
+3. Pharmacy Module
+
+Register/Login with pharmacy license details.
+
+Manage medicine inventory.
+
+Receive and validate prescriptions from doctors.
+
+Notify patients when medicines are ready.
+
+AI Assistant for Pharmacy:
+
+Suggest stock replenishment based on demand trends.
+
+Recommend generic alternatives for unavailable medicines.
+
+Automate billing and invoicing support.
+
+Agentic AI Assistant (Cross-Platform)
+
+Integrated via OpenRouter API.
+
+Acts as a helpful agent across all modules.
+
+Provides contextual, role-based responses (Doctor, Patient, Pharmacy).
+
+Uses Node.js routes to forward user queries to the OpenRouter LLM and return results.
+
+Tech Stack
+
+Backend: Node.js with Express.js
+
+Database: PostgreSQL (pg library for DB integration)
+
+Frontend: HTML, CSS (responsive design, clean UI)
+
+AI Layer: OpenRouter API for agentic AI integration
+
+Environment Variables (.env)
+
+All sensitive information will be stored securely in a .env file:
+
+# PostgreSQL Configuration
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=mediconnect
+DB_USER=your_username
+DB_PASSWORD=your_password
+
+# OpenRouter API Key
+OPENROUTER_API_KEY=your_api_key_here
+
+
+⚠️ The .env file should never be committed to GitHub for security reasons.
+
+Database (Sample Schema in PostgreSQL)
+
+Users Table: (user_id, name, role [doctor/patient/pharmacy], email, password_hash)
+
+Patients Table: (patient_id, user_id, medical_history, age, gender)
+
+Doctors Table: (doctor_id, user_id, specialization, experience)
+
+Pharmacies Table: (pharmacy_id, user_id, location, license_number)
+
+Appointments Table: (appointment_id, patient_id, doctor_id, date, status)
+
+Prescriptions Table: (prescription_id, doctor_id, patient_id, pharmacy_id, medicines, date)
+
+Inventory Table: (pharmacy_id, medicine_name, stock, expiry_date, price)
+
+Expected Outcomes
+
+Streamlined healthcare interaction between patients, doctors, and pharmacies.
+
+AI-powered insights for faster decision-making.
+
+Secure, scalable, and user-friendly healthcare platform.
+
+Proper separation of credentials using .env for deployment safety.
