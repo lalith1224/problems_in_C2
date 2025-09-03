@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { useQuery } from "@tanstack/react-query";
@@ -8,12 +8,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Navigation from "@/components/ui/navigation";
 import AIAssistantModal from "@/components/ai-assistant-modal";
-import { useState } from "react";
+import AppointmentBookingModal from "@/components/appointment-booking-modal";
 
 export default function PatientDashboard() {
   const { toast } = useToast();
   const { isAuthenticated, isLoading, user, profile } = useAuth();
   const [showAIModal, setShowAIModal] = useState(false);
+  const [showBookingModal, setShowBookingModal] = useState(false);
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
@@ -225,6 +226,7 @@ export default function PatientDashboard() {
                     <Button
                       variant="outline"
                       className="flex items-center justify-between p-4 h-auto hover:bg-muted/50"
+                      onClick={() => setShowBookingModal(true)}
                       data-testid="button-book-appointment"
                     >
                       <div className="flex items-center">
@@ -320,7 +322,11 @@ export default function PatientDashboard() {
                   <div className="text-center text-muted-foreground py-8">
                     <Calendar className="h-8 w-8 mx-auto mb-2 opacity-50" />
                     <p>No upcoming appointments</p>
-                    <Button className="mt-4" data-testid="button-schedule-appointment">
+                    <Button 
+                      className="mt-4" 
+                      onClick={() => setShowBookingModal(true)}
+                      data-testid="button-schedule-appointment"
+                    >
                       Schedule Your First Appointment
                     </Button>
                   </div>
@@ -336,6 +342,12 @@ export default function PatientDashboard() {
         isOpen={showAIModal}
         onClose={() => setShowAIModal(false)}
         userRole="patient"
+      />
+
+      {/* Appointment Booking Modal */}
+      <AppointmentBookingModal 
+        isOpen={showBookingModal}
+        onClose={() => setShowBookingModal(false)}
       />
     </div>
   );

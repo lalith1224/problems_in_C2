@@ -8,11 +8,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Navigation from "@/components/ui/navigation";
 import AIAssistantModal from "@/components/ai-assistant-modal";
+import PrescriptionModal from "@/components/prescription-modal";
 
 export default function DoctorDashboard() {
   const { toast } = useToast();
   const { isAuthenticated, isLoading, user, profile } = useAuth();
   const [showAIModal, setShowAIModal] = useState(false);
+  const [showPrescriptionModal, setShowPrescriptionModal] = useState(false);
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
@@ -261,6 +263,7 @@ export default function DoctorDashboard() {
                     <Button
                       className="w-full bg-doctor/10 text-doctor hover:bg-doctor/20"
                       variant="ghost"
+                      onClick={() => setShowPrescriptionModal(true)}
                       data-testid="button-create-prescription"
                     >
                       <Plus className="h-4 w-4 mr-2" />
@@ -345,6 +348,13 @@ export default function DoctorDashboard() {
       <AIAssistantModal 
         isOpen={showAIModal}
         onClose={() => setShowAIModal(false)}
+        userRole="doctor"
+      />
+
+      {/* Prescription Modal */}
+      <PrescriptionModal 
+        isOpen={showPrescriptionModal}
+        onClose={() => setShowPrescriptionModal(false)}
         userRole="doctor"
       />
     </div>

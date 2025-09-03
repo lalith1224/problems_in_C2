@@ -8,12 +8,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Navigation from "@/components/ui/navigation";
 import AIAssistantModal from "@/components/ai-assistant-modal";
+import InventoryManagementModal from "@/components/inventory-management-modal";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 
 export default function PharmacyDashboard() {
   const { toast } = useToast();
   const { isAuthenticated, isLoading, user, profile } = useAuth();
   const [showAIModal, setShowAIModal] = useState(false);
+  const [showInventoryModal, setShowInventoryModal] = useState(false);
+  const [editInventoryItem, setEditInventoryItem] = useState(null);
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
@@ -292,7 +295,15 @@ export default function PharmacyDashboard() {
                               <p className="text-sm text-muted-foreground">Stock: {item.currentStock} remaining</p>
                               <p className="text-xs text-orange-600 font-medium">Reorder suggested</p>
                             </div>
-                            <Button variant="ghost" size="sm" data-testid="button-reorder-medicine">
+                            <Button 
+                              variant="ghost" 
+                              size="sm" 
+                              onClick={() => {
+                                setEditInventoryItem(item);
+                                setShowInventoryModal(true);
+                              }}
+                              data-testid="button-reorder-medicine"
+                            >
                               <Plus className="h-4 w-4 text-pharmacy" />
                             </Button>
                           </div>
@@ -314,7 +325,15 @@ export default function PharmacyDashboard() {
                               <p className="text-sm text-muted-foreground">Expires: {new Date(item.expiryDate).toLocaleDateString()}</p>
                               <p className="text-xs text-yellow-600 font-medium">Expiring soon</p>
                             </div>
-                            <Button variant="ghost" size="sm" data-testid="button-manage-expiry">
+                            <Button 
+                              variant="ghost" 
+                              size="sm" 
+                              onClick={() => {
+                                setEditInventoryItem(item);
+                                setShowInventoryModal(true);
+                              }}
+                              data-testid="button-manage-expiry"
+                            >
                               <Calendar className="h-4 w-4 text-yellow-600" />
                             </Button>
                           </div>
@@ -401,6 +420,16 @@ export default function PharmacyDashboard() {
         isOpen={showAIModal}
         onClose={() => setShowAIModal(false)}
         userRole="pharmacy"
+      />
+
+      {/* Inventory Management Modal */}
+      <InventoryManagementModal 
+        isOpen={showInventoryModal}
+        onClose={() => {
+          setShowInventoryModal(false);
+          setEditInventoryItem(null);
+        }}
+        editItem={editInventoryItem}
       />
     </div>
   );
